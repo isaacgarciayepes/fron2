@@ -1,19 +1,18 @@
 
-import './App.css'
+import { Routes, Route } from 'react-router-dom';
+import Dashboard from '../pages/Dashboard';
+import Students from '../pages/Students';
+import Courses from '../pages/Courses';
+import Enrollments from '../pages/Enrollments';
 
-function App() {
-  
+export default function AppRoutes() {
   return (
-    <>
-    <div className="m-4 flex items-center justify-center">
-
-<h1 className="text-4xl font-bold text-blue-500"> 
-      Hola mundo
-      
-</h1>
-     </div>
-    </>
-  )
+    <Routes>
+      <Route path="/" element={<Dashboard />} />
+      <Route path="/students" element={<Students />} />
+      <Route path="/courses" element={<Courses />} />
+      <Route path="/enrollments" element={<Enrollments />} />
+    </Routes>
+  );
 }
-
 export default App

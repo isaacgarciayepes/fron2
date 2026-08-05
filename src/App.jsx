@@ -1,19 +1,18 @@
+import { BrowserRouter } from 'react-router-dom';
+import Sidebar from './components/Sidebar';
+import AppRoutes from './routes/AppRoutes';
 
-import './App.css'
-
-function App() {
-  
+export default function App() {
   return (
-    <>
-    <div className="m-4 flex items-center justify-center">
-
-<h1 className="text-4xl font-bold text-blue-500"> 
-      Hola mundo
-      
-</h1>
-     </div>
-    </>
-  )
+    <BrowserRouter>
+      <div className="flex min-h-screen bg-gray-50">
+        <Sidebar />
+        <main className="flex-1 p-8">
+          <AppRoutes />
+        </main>
+      </div>
+    </BrowserRouter>
+  );
 }
 
 export default App
