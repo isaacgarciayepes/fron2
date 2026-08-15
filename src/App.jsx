@@ -1,5 +1,5 @@
-import { BrowserRouter } from 'react-router-dom';
-import Sidebar from './components/Sidebar';
+import { BrowserRouter } from  'react-router-dom';
+
 import AppRoutes from './routes/AppRoutes';
 
 export default function App() {
@@ -14,5 +14,3 @@ export default function App() {
     </BrowserRouter>
   );
 }
-
-export default App

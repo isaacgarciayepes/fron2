@@ -4,6 +4,7 @@ import Dashboard from '../pages/Dashboard';
 import Students from '../pages/Students';
 import Courses from '../pages/Courses';
 import Enrollments from '../pages/Enrollments';
+import { supabase } from "../config/supabase";
 
 export default function AppRoutes() {
   return (
@@ -15,4 +16,4 @@ export default function AppRoutes() {
     </Routes>
   );
 }
-export default App
+
