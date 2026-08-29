@@ -1,4 +1,4 @@
-import MenuNavegacion from "../components/MenuNavegacion";
+import MenuNavegacion from "../components/MenuNavegation";
 
 function LayoutPrueba() {
   return (
@@ -22,3 +22,5 @@ function LayoutPrueba() {
     </div>
   );
 }
+
+export default LayoutPrueba;
