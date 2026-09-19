@@ -1,0 +1,5 @@
+function CoursesTable({ courses, onEdit, onDelete }) {
+  if (!courses?.length) return <p className="text-gray-500 p-4">Todavía no hay cursos registrados.</p>;
+  return <div className="overflow-x-auto"><table className="w-full text-left border-collapse bg-white rounded-xl shadow overflow-hidden"><thead><tr className="border-b bg-gray-50"><th className="p-4">Código</th><th className="p-4">Nombre</th><th className="p-4">Descripción</th><th className="p-4">Cupo máximo</th><th className="p-4">Acciones</th></tr></thead><tbody>{courses.map((course) => <tr key={course.id} className="border-t"><td className="p-4">{course.code}</td><td className="p-4">{course.name}</td><td className="p-4 max-w-xs truncate">{course.description}</td><td className="p-4">{course.maxCapacity}</td><td className="p-4"><div className="flex gap-3"><button onClick={() => onEdit?.(course)} className="text-blue-600 hover:underline text-sm font-medium">Editar</button><button onClick={() => onDelete?.(course)} className="text-red-600 hover:underline text-sm font-medium">Eliminar</button></div></td></tr>)}</tbody></table></div>;
+}
+export default CoursesTable;

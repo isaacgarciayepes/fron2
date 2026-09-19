@@ -1,42 +1,31 @@
-import { supabase } from "../config/supabase";
+import axios from 'axios'
 
-export const getEnrollments = async () => {
-  const { data, error } = await supabase
-    .from("enrollments")
-    .select("*")
-    .order("created_at", { ascending: false });
+const BASE_URL = '/backend/api/enrollments'
 
-  if (error) throw error;
-  return data;
-};
+const getErrorMessage = (error) => {
+  const data = error.response?.data
+  const fields = data?.fields
 
-export const createEnrollment = async (enrollment) => {
-  const { data, error } = await supabase
-    .from("enrollments")
-    .insert([enrollment])
-    .select();
+  if (fields && typeof fields === 'object') {
+    return Object.values(fields).join(' ')
+  }
 
-  if (error) throw error;
-  return data;
-};
+  return data?.message || data?.error || error.message || 'Error de conexión con el servidor'
+}
 
-export const updateEnrollment = async (enrollmentid, updates) => {
-  const { data, error } = await supabase
-    .from("enrollments")
-    .update(updates)
-    .eq("enrollmentid", enrollmentid)
-    .select();
+const request = async (callback) => {
+  try {
+    return await callback()
+  } catch (error) {
+    const normalized = new Error(getErrorMessage(error))
+    normalized.status = error.response?.status
+    normalized.code = error.response?.data?.code
+    normalized.details = error.response?.data?.fields
+    throw normalized
+  }
+}
 
-  if (error) throw error;
-  return data;
-};
-
-export const deleteEnrollment = async (enrollmentid) => {
-  const { error } = await supabase
-    .from("enrollments")
-    .delete()
-    .eq("enrollmentid", enrollmentid);
-
-  if (error) throw error;
-  return true;
-};
+export const getEnrollments = () => request(async () => (await axios.get(BASE_URL)).data)
+export const createEnrollment = (enrollment) => request(async () => (await axios.post(BASE_URL, enrollment)).data)
+export const updateEnrollment = (id, enrollment) => request(async () => (await axios.put(`${BASE_URL}/${id}`, enrollment)).data)
+export const deleteEnrollment = (id) => request(async () => { await axios.delete(`${BASE_URL}/${id}`) })

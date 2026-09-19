@@ -1,4 +1,4 @@
-import MenuNavegacion from "./NavMenu";
+import MenuNavegacion from "./MenuNavegation";
 
 function Sidebar() {
   return (

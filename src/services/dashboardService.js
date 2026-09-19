@@ -1,19 +1,21 @@
-import { supabase } from "../config/supabase";
+import axios from 'axios'
 
 export const getDashboardStats = async () => {
-  const [studentsRes, coursesRes, enrollmentsRes] = await Promise.all([
-    supabase.from("students").select("*", { count: "exact", head: true }),
-    supabase.from("courses").select("*", { count: "exact", head: true }),
-    supabase.from("enrollments").select("*", { count: "exact", head: true }),
-  ]);
+  try {
+    const [students, courses, enrollments] = await Promise.all([
+      axios.get('/backend/api/students'),
+      axios.get('/backend/api/courses'),
+      axios.get('/backend/api/enrollments'),
+    ])
 
-  if (studentsRes.error) throw studentsRes.error;
-  if (coursesRes.error) throw coursesRes.error;
-  if (enrollmentsRes.error) throw enrollmentsRes.error;
-
-  return {
-    students: studentsRes.count ?? 0,
-    courses: coursesRes.count ?? 0,
-    enrollments: enrollmentsRes.count ?? 0,
-  };
-};
+    return {
+      students: students.data.length,
+      courses: courses.data.length,
+      enrollments: enrollments.data.length,
+    }
+  } catch (error) {
+    const data = error.response?.data
+    const message = data?.message || data?.error || error.message || 'Error de conexión con el servidor'
+    throw new Error(message)
+  }
+}
