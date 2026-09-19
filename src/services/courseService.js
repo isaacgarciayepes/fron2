@@ -1,42 +1,31 @@
-import { supabase } from "../config/supabase";
+import axios from 'axios'
 
-export const getCourses = async () => {
-  const { data, error } = await supabase
-    .from("courses")
-    .select("*")
-    .order("created_at", { ascending: false });
+const BASE_URL = '/backend/api/courses'
 
-  if (error) throw error;
-  return data;
-};
+const getErrorMessage = (error) => {
+  const data = error.response?.data
+  const fields = data?.fields
 
-export const createCourse = async (course) => {
-  const { data, error } = await supabase
-    .from("courses")
-    .insert([course])
-    .select();
+  if (fields && typeof fields === 'object') {
+    return Object.values(fields).join(' ')
+  }
 
-  if (error) throw error;
-  return data;
-};
+  return data?.message || data?.error || error.message || 'Error de conexión con el servidor'
+}
 
-export const updateCourse = async (courseid, updates) => {
-  const { data, error } = await supabase
-    .from("courses")
-    .update(updates)
-    .eq("courseid", courseid)
-    .select();
+const request = async (callback) => {
+  try {
+    return await callback()
+  } catch (error) {
+    const normalized = new Error(getErrorMessage(error))
+    normalized.status = error.response?.status
+    normalized.code = error.response?.data?.code
+    normalized.details = error.response?.data?.fields
+    throw normalized
+  }
+}
 
-  if (error) throw error;
-  return data;
-};
-
-export const deleteCourse = async (courseid) => {
-  const { error } = await supabase
-    .from("courses")
-    .delete()
-    .eq("courseid", courseid);
-
-  if (error) throw error;
-  return true;
-};
+export const getCourses = () => request(async () => (await axios.get(BASE_URL)).data)
+export const createCourse = (course) => request(async () => (await axios.post(BASE_URL, course)).data)
+export const updateCourse = (id, course) => request(async () => (await axios.put(`${BASE_URL}/${id}`, course)).data)
+export const deleteCourse = (id) => request(async () => { await axios.delete(`${BASE_URL}/${id}`) })

@@ -1,6 +1,4 @@
 
-import Footer from "../components/Footer";
-import Sidevar from "../components/Sidevar";
 
 export default function MainLayout() {
   return (
